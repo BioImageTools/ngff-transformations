@@ -1,0 +1,249 @@
+{
+    "image-label": {
+        "version": "0.4"
+    },
+    "multiscales": [
+        {
+            "axes": [
+                {
+                    "name": "z",
+                    "type": "space"
+                },
+                {
+                    "name": "y",
+                    "type": "space"
+                },
+                {
+                    "name": "x",
+                    "type": "space"
+                }
+            ],
+            "coordinateTransformations": [
+                {
+                    "affine": [
+                        [
+                            2.0,
+                            0.0,
+                            0.0,
+                            10.5
+                        ],
+                        [
+                            0.0,
+                            2.0,
+                            0.0,
+                            8.5
+                        ],
+                        [
+                            0.0,
+                            0.0,
+                            2.0,
+                            8.5
+                        ]
+                    ],
+                    "input": {
+                        "axes": [
+                            {
+                                "name": "z",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "y",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "x",
+                                "type": "space",
+                                "unit": "unit"
+                            }
+                        ],
+                        "name": "zyx"
+                    },
+                    "output": {
+                        "axes": [
+                            {
+                                "name": "z",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "y",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "x",
+                                "type": "space",
+                                "unit": "unit"
+                            }
+                        ],
+                        "name": "transformation0"
+                    },
+                    "type": "affine"
+                },
+                {
+                    "input": {
+                        "axes": [
+                            {
+                                "name": "z",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "y",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "x",
+                                "type": "space",
+                                "unit": "unit"
+                            }
+                        ],
+                        "name": "zyx"
+                    },
+                    "output": {
+                        "axes": [
+                            {
+                                "name": "z",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "y",
+                                "type": "space",
+                                "unit": "unit"
+                            },
+                            {
+                                "name": "x",
+                                "type": "space",
+                                "unit": "unit"
+                            }
+                        ],
+                        "name": "transformation1"
+                    },
+                    "transformations": [
+                        {
+                            "input": {
+                                "axes": [
+                                    {
+                                        "name": "z",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "x",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    }
+                                ],
+                                "name": "zyx"
+                            },
+                            "output": {
+                                "axes": [
+                                    {
+                                        "name": "z",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "x",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    }
+                                ],
+                                "name": "global"
+                            },
+                            "scale": [
+                                2.0,
+                                2.0,
+                                2.0
+                            ],
+                            "type": "scale"
+                        },
+                        {
+                            "input": {
+                                "axes": [
+                                    {
+                                        "name": "z",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "x",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    }
+                                ],
+                                "name": "zyx"
+                            },
+                            "output": {
+                                "axes": [
+                                    {
+                                        "name": "z",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    },
+                                    {
+                                        "name": "x",
+                                        "type": "space",
+                                        "unit": "unit"
+                                    }
+                                ],
+                                "name": "global"
+                            },
+                            "translation": [
+                                10.5,
+                                8.5,
+                                8.5
+                            ],
+                            "type": "translation"
+                        }
+                    ],
+                    "type": "sequence"
+                }
+            ],
+            "datasets": [
+                {
+                    "coordinateTransformations": [
+                        {
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "type": "scale"
+                        }
+                    ],
+                    "path": "0"
+                }
+            ],
+            "name": "x",
+            "version": "0.4"
+        }
+    ],
+    "spatialdata_attrs": {
+        "version": "0.1"
+    }
+}
