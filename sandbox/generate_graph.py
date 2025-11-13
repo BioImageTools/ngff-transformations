@@ -33,7 +33,7 @@ def get_all_zarrs(directory: Path) -> list[Path]:
 for zarr_path in get_all_zarrs(EXAMPLE_PATH):
     relative_path = zarr_path.relative_to(EXAMPLE_PATH)
 
-    # if 'stitched_tiles_3d' not in str(relative_path):
+    # if 'organ' not in str(relative_path):
     #     continue
 
     group: Collection | Image

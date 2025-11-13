@@ -1659,8 +1659,8 @@ wheels = [
 
 [[package]]
 name = "ome-zarr-models"
-version = "1.4.dev31+ge6fb96f4f"
-source = { git = "https://github.com/LucaMarconato/ome-zarr-models-py?rev=add-cs-identifier#e6fb96f4f34234dbee51ca1b9b3008a4643ae622" }
+version = "1.4.dev32+g0fc794a64"
+source = { git = "https://github.com/LucaMarconato/ome-zarr-models-py?rev=add-cs-identifier#0fc794a64d6de9764abacff4ad7583cd001f26f9" }
 dependencies = [
     { name = "pydantic" },
     { name = "pydantic-zarr" },

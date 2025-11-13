@@ -5,7 +5,11 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from pydantic import ValidationError
 from ome_zarr_models._utils import TransformGraph
-from ome_zarr_models._v06.coordinate_transforms import CoordinateSystemIdentifier, Transform
+from ome_zarr_models._v06.coordinate_transforms import (
+    CoordinateSystemIdentifier,
+    Transform,
+)
+
 
 def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
     """
@@ -34,7 +38,6 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
     """
     g = nx.DiGraph()
 
-
     # Add all named coordinate systems as nodes
     for cs_name in tgraph._named_systems:
         g.add_node(
@@ -58,12 +61,17 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
     for path_name, subgraph in tgraph._subgraphs.items():
         for src, edges in subgraph._graph.items():
             for tgt, transform in edges.items():
-                input_image = transform.input
-                path = f"{path_name}/{input_image}"
-                g.add_node(
-                    path,
-                    coordinate_system=None,
+                identifier = CoordinateSystemIdentifier(
+                    name=src,
+                    path=path_name,
                 )
+                if identifier not in g.nodes:
+                    input_image = transform.input
+                    path = f"{path_name}/{input_image}"
+                    g.add_node(
+                        path,
+                        coordinate_system=None,
+                    )
 
     for src, edges in tgraph._graph.items():
         for tgt, transform in edges.items():
@@ -74,7 +82,6 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
                 transform,
             )
 
-
     for path_name, subgraph in tgraph._subgraphs.items():
         for src, edges in subgraph._graph.items():
             for tgt, transform in edges.items():
@@ -83,8 +90,8 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
 
                 _add_transform_and_inverse_transformation_edges(
                     g=g,
-                    input_cs=_get_name_of_subgraph(src, path_name),
-                    output_cs=_get_name_of_subgraph(tgt, path_name),
+                    input_cs=_get_name_of_subgraph(src, path_name, g.nodes),
+                    output_cs=_get_name_of_subgraph(tgt, path_name, g.nodes),
                     transform=transform,
                 )
         pass
@@ -100,13 +107,25 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
 
     return g
 
-def _get_name_of_subgraph(cs_name: str, path_name: str) -> str | CoordinateSystemIdentifier:
-    if cs_name in ['0', '1', '2', '3', '4', '5']:
-        return f'{path_name}/{cs_name}'
-    return CoordinateSystemIdentifier(
+
+def _get_name_of_subgraph(
+    cs_name: str, path_name: str, nodes: nx.classes.reportviews.NodeView
+) -> str | CoordinateSystemIdentifier:
+    cs_path_name = f"{path_name}/{cs_name}"
+    cs_identifier = CoordinateSystemIdentifier(
         name=cs_name,
         path=path_name,
     )
+    if cs_identifier in nodes and cs_path_name in nodes:
+        raise ValueError(
+            f"Ambiguous coordinate system name '{cs_identifier}' found in both root and subgraph '{path_name}'. Use full identifier."
+        )
+    if cs_identifier not in nodes and cs_path_name not in nodes:
+        raise ValueError(f"Coordinate system '{cs_identifier}' not found in graph nodes.")
+    if cs_path_name in nodes:
+        return cs_path_name
+    return cs_identifier
+
 
 def _add_transform_and_inverse_transformation_edges(
     g: nx.DiGraph,
@@ -134,8 +153,9 @@ def _add_transform_and_inverse_transformation_edges(
         pass
 
 
-
-def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True) -> None:
+def draw_graph(
+    g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True
+) -> None:
     """
     Draw a NetworkX graph showing all nodes and edges with their names.
 
@@ -154,58 +174,40 @@ def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labe
     pos = nx.spring_layout(g)
 
     # Draw nodes
-    nx.draw_networkx_nodes(
-        g,
-        pos,
-        node_color='lightblue',
-        node_size=3000,
-        alpha=0.9
-    )
+    nx.draw_networkx_nodes(g, pos, node_color="lightblue", node_size=3000, alpha=0.9)
 
     # Draw node labels (coordinate system names)
-    nx.draw_networkx_labels(
-        g,
-        pos,
-        font_size=10,
-        font_weight='bold'
-    )
+    nx.draw_networkx_labels(g, pos, font_size=10, font_weight="bold")
 
     # Draw edges
     nx.draw_networkx_edges(
         g,
         pos,
-        edge_color='gray',
+        edge_color="gray",
         arrows=True,
         arrowsize=20,
-        arrowstyle='->',
+        arrowstyle="->",
         width=2,
-        connectionstyle='arc3,rad=0.1'
+        connectionstyle="arc3,rad=0.1",
     )
 
     # Draw edge labels if requested
     if with_edge_labels:
         edge_labels = {}
         for u, v, data in g.edges(data=True):
-            edge_type = data.get('edge_type', 'unknown')
-            if edge_type == 'transformation' and data.get('transformation'):
+            edge_type = data.get("edge_type", "unknown")
+            if edge_type == "transformation" and data.get("transformation"):
                 # Get transformation type
-                transform = data['transformation']
+                transform = data["transformation"]
                 transform_type = type(transform).__name__
                 edge_labels[(u, v)] = transform_type
-            elif edge_type == 'collection_link':
-                edge_labels[(u, v)] = 'collection'
+            elif edge_type == "collection_link":
+                edge_labels[(u, v)] = "collection"
             else:
                 edge_labels[(u, v)] = edge_type
 
-        nx.draw_networkx_edge_labels(
-            g,
-            pos,
-            edge_labels,
-            font_size=8,
-            font_color='red'
-        )
+        nx.draw_networkx_edge_labels(g, pos, edge_labels, font_size=8, font_color="red")
 
-    plt.axis('off')
+    plt.axis("off")
     plt.tight_layout()
     plt.show()
-
