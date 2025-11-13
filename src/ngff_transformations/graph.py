@@ -211,3 +211,63 @@ def draw_graph(
     plt.axis("off")
     plt.tight_layout()
     plt.show()
+
+
+def get_relative_path(
+    graph: nx.DiGraph,
+    source_coordinate_system: str,
+    target_coordinate_system: str) -> list[str]:
+    cost_key = "cost"
+    """
+    Get the relative path from one node to another in the transformation graph.
+
+    Currently, this function doesn't add functionality to nx.shortest_path.
+    However potentially this function could be extended in the future to e.g. add
+    different path finding algorithms or preprocess cost values on edges.
+
+    See: https://github.com/bogovicj/ngff/wiki/Transforms-notes,-examples,-proposals#multiple-transforms-between-spaces
+
+    Parameters
+    ----------
+    graph : nx.DiGraph
+        The transformation graph.
+    source_coordinate_system : str
+        The starting coordinate system node.
+    target_coordinate_system : str
+        The target coordinate system node.
+    Returns
+    -------
+    list
+        List of edges representing the path from source to target.
+    """
+
+    path = nx.shortest_path(
+        graph,
+        source=source_coordinate_system,
+        target=target_coordinate_system,
+        weight=cost_key,
+    )
+    return path
+
+
+def create_sequence_transformation_from_path(
+    graph: nx.DiGraph,
+    path: list[str],
+) -> list[Any]:
+    """
+    Create a sequence of transformations from a path of coordinate systems
+    in the transformation graph.
+    """
+    transformations = []
+    for i in range(len(path) - 1):
+        source = path[i]
+        target = path[i + 1]
+        edge_transformation = graph.get_edge_data(source, target)["transformation"]
+        transformations.append(edge_transformation)
+
+    from ome_zarr_models._v06.coordinate_transforms import Sequence
+    transformations = Sequence(
+        transformations=transformations
+    )
+
+    return transformations
