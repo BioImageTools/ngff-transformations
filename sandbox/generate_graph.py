@@ -39,19 +39,27 @@ for zarr_path in get_all_zarrs(EXAMPLE_PATH):
             group = Collection.from_zarr(zarr.open_group(zarr_path, mode="r"))
         else:
             group = Image.from_zarr(zarr.open_group(zarr_path, mode="r"))
-    except Exception:
+    except Exception as e:
+        # print(str(e))
+        # continue
         print(f"😢 Failed to load group at {zarr_path.relative_to(EXAMPLE_PATH)}")
         continue
 
     print(f"📈 Rendering transform graph for {zarr_path.relative_to(EXAMPLE_PATH)}")
     graph = group.transform_graph()
-    graphviz_graph = graph.to_graphviz()
-    from PIL import Image as PILImage
-    import io
 
-    png_bytes = graphviz_graph.pipe(format="png")
+    from ngff_transformations.graph import transform_graph_to_networkx, draw_graph
 
-    PILImage.open(io.BytesIO(png_bytes)).show()  # uses default image viewer
+    nx_graph = transform_graph_to_networkx(graph)
+    draw_graph(nx_graph)
+
+    # graphviz_graph = graph.to_graphviz()
+    # from PIL import Image as PILImage
+    # import io
+    #
+    # png_bytes = graphviz_graph.pipe(format="png")
+    #
+    # PILImage.open(io.BytesIO(png_bytes)).show()  # uses default image viewer
 
     pass
 
