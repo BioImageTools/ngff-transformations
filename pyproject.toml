@@ -23,7 +23,8 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "anndata",
+#  "ome-zarr-models ",
+   "ome-zarr-models @ git+https://github.com/ome-zarr-models/ome-zarr-models-py@rfc5",
   # for debug logging (referenced from the issue template)
   "session-info2",
 ]
@@ -82,6 +83,10 @@ features = [ "dev", "test" ]
 [tool.hatch.envs.hatch-test.overrides]
 # If the matrix variable `deps` is set to "pre",
 # set the environment variable `UV_PRERELEASE` to "allow".
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
 matrix.deps.env-vars = [
   { key = "UV_PRERELEASE", value = "allow", if = [ "pre" ] },
 ]
