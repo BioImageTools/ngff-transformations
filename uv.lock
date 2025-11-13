@@ -1483,7 +1483,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "myst-nb", marker = "extra == 'doc'", specifier = ">=1.1" },
     { name = "networkx", specifier = ">=3.5" },
-    { name = "ome-zarr-models", git = "https://github.com/ome-zarr-models/ome-zarr-models-py?rev=rfc5" },
+    { name = "ome-zarr-models", git = "https://github.com/LucaMarconato/ome-zarr-models-py?rev=add-cs-identifier" },
     { name = "pandas", marker = "extra == 'doc'" },
     { name = "pillow", specifier = ">=12.0.0" },
     { name = "pre-commit", marker = "extra == 'dev'" },
@@ -1659,8 +1659,8 @@ wheels = [
 
 [[package]]
 name = "ome-zarr-models"
-version = "1.4.dev30+g773eb4539"
-source = { git = "https://github.com/ome-zarr-models/ome-zarr-models-py?rev=rfc5#773eb4539ac18aea7c8f308338e27da5fb90564e" }
+version = "1.4.dev31+ge6fb96f4f"
+source = { git = "https://github.com/LucaMarconato/ome-zarr-models-py?rev=add-cs-identifier#e6fb96f4f34234dbee51ca1b9b3008a4643ae622" }
 dependencies = [
     { name = "pydantic" },
     { name = "pydantic-zarr" },

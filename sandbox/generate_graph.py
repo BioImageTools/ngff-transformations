@@ -33,6 +33,9 @@ def get_all_zarrs(directory: Path) -> list[Path]:
 for zarr_path in get_all_zarrs(EXAMPLE_PATH):
     relative_path = zarr_path.relative_to(EXAMPLE_PATH)
 
+    # if 'stitched_tiles_3d' not in str(relative_path):
+    #     continue
+
     group: Collection | Image
     try:
         if relative_path.parts[0] == "user_stories":
@@ -40,6 +43,7 @@ for zarr_path in get_all_zarrs(EXAMPLE_PATH):
         else:
             group = Image.from_zarr(zarr.open_group(zarr_path, mode="r"))
     except Exception as e:
+        # raise e
         # print(str(e))
         # continue
         print(f"😢 Failed to load group at {zarr_path.relative_to(EXAMPLE_PATH)}")

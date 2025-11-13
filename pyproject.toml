@@ -27,7 +27,7 @@ dependencies = [
    "matplotlib>=3.10.7",
    "networkx>=3.5",
    #  "ome-zarr-models ",
-   "ome-zarr-models @ git+https://github.com/ome-zarr-models/ome-zarr-models-py@rfc5",
+   "ome-zarr-models @ git+https://github.com/LucaMarconato/ome-zarr-models-py@add-cs-identifier",
    "pillow>=12.0.0",
    "pytest>=9.0.1",
    # for debug logging (referenced from the issue template)

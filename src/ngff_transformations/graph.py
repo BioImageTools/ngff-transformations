@@ -3,8 +3,9 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
+from pydantic import ValidationError
 from ome_zarr_models._utils import TransformGraph
-
+from ome_zarr_models._v06.coordinate_transforms import CoordinateSystemIdentifier, Transform
 
 def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
     """
@@ -34,38 +35,58 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
     g = nx.DiGraph()
 
 
-    # Add all coordinate systems as nodes
+    # Add all named coordinate systems as nodes
     for cs_name in tgraph._named_systems:
-        node_name = cs_name
         g.add_node(
-            node_name,
+            cs_name,
             coordinate_system=tgraph._named_systems[cs_name],
-            is_default=(cs_name == tgraph._default_system),
         )
 
-    # Add transformations as edges
-    for input_cs, output_dict in tgraph._graph.items():
-        for output_cs, transform in output_dict.items():
-            source_node = input_cs
-            target_node = output_cs
-            g.add_edge(
-                source_node,
-                target_node,
-                transformation=transform,
-                edge_type="transformation",
+    # Add also the named coordinate systems from the subgraphs
+    for path_name, subgraph in tgraph._subgraphs.items():
+        for cs_name in subgraph._named_systems:
+            identifier = CoordinateSystemIdentifier(
+                name=cs_name,
+                path=path_name,
             )
-            try:
-                inverse = transform.get_inverse()
-                g.add_edge(
-                    target_node,
-                    source_node,
-                    transformation=inverse,
-                    edge_type="transformation",
-                )
-            except NotImplementedError:
-                pass
+            g.add_node(
+                identifier,
+                coordinate_system=subgraph._named_systems[cs_name],
+            )
 
-    for graph_name, subgraph in tgraph._subgraphs.items():
+    # finally add the "paths" coordinate systems as nodes
+    for path_name, subgraph in tgraph._subgraphs.items():
+        for src, edges in subgraph._graph.items():
+            for tgt, transform in edges.items():
+                input_image = transform.input
+                path = f"{path_name}/{input_image}"
+                g.add_node(
+                    path,
+                    coordinate_system=None,
+                )
+
+    for src, edges in tgraph._graph.items():
+        for tgt, transform in edges.items():
+            _add_transform_and_inverse_transformation_edges(
+                g,
+                src,
+                tgt,
+                transform,
+            )
+
+
+    for path_name, subgraph in tgraph._subgraphs.items():
+        for src, edges in subgraph._graph.items():
+            for tgt, transform in edges.items():
+                # TODO: hack! Replace
+                # TODO: we assume the the subgraph does not contain transformation from the parent graph, so we use the CoordinateSystemIdentifier
+
+                _add_transform_and_inverse_transformation_edges(
+                    g=g,
+                    input_cs=_get_name_of_subgraph(src, path_name),
+                    output_cs=_get_name_of_subgraph(tgt, path_name),
+                    transform=transform,
+                )
         pass
         # _add_graph_to_networkx(subgraph, g)
         # if subgraph._default_system:
@@ -78,6 +99,40 @@ def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
         #     )
 
     return g
+
+def _get_name_of_subgraph(cs_name: str, path_name: str) -> str | CoordinateSystemIdentifier:
+    if cs_name in ['0', '1', '2', '3', '4', '5']:
+        return f'{path_name}/{cs_name}'
+    return CoordinateSystemIdentifier(
+        name=cs_name,
+        path=path_name,
+    )
+
+def _add_transform_and_inverse_transformation_edges(
+    g: nx.DiGraph,
+    input_cs: str | CoordinateSystemIdentifier,
+    output_cs: str | CoordinateSystemIdentifier,
+    transform: Transform,
+):
+    source_node = input_cs
+    target_node = output_cs
+    g.add_edge(
+        source_node,
+        target_node,
+        transformation=transform,
+        edge_type="transformation",
+    )
+    try:
+        inverse = transform.get_inverse()
+        g.add_edge(
+            target_node,
+            source_node,
+            transformation=inverse,
+            edge_type="transformation",
+        )
+    except (NotImplementedError, ValidationError):
+        pass
+
 
 
 def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True) -> None:
@@ -96,7 +151,7 @@ def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labe
     plt.figure(figsize=figsize)
 
     # Use spring layout for node positioning
-    pos = nx.spring_layout(g, k=2, iterations=50, seed=42)
+    pos = nx.spring_layout(g)
 
     # Draw nodes
     nx.draw_networkx_nodes(
