@@ -1,3 +1,28 @@
+# Temp files
 .DS_Store
-.idea/
+*~
+buck-out/
+
+# IDEs
+/.idea/
+/.vscode/
+
+# Compiled files
+.venv/
+__pycache__/
+.*cache/
+
+# Distribution / packaging
+/dist/
+
+# Tests and coverage
+/data/
+/node_modules/
+/.coverage*
+
+# docs
+/docs/generated/
+/docs/_build/
+
+# others
 .ipynb_checkpoints/
