@@ -66,6 +66,8 @@ optional-dependencies.sandbox = [
   "scikit-image",
   "xarray",
   "networkx",
+  "matplotlib",
+  "ipympl",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://ngff-transformations.readthedocs.io/"
