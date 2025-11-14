@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from functools import singledispatch
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from dask.dataframe import DataFrame as DaskDataFrame
 from geopandas import GeoDataFrame
-from xarray import DataArray, Dataset, DataTree
-
 from spatialdata._logging import logger
 from spatialdata._types import ArrayLike
+from xarray import DataArray, Dataset, DataTree
 
 if TYPE_CHECKING:
     from spatialdata._core.spatialdata import SpatialData
@@ -62,6 +61,7 @@ def _set_transformations_to_element(element: Any, transformations: MappingToCoor
 def _set_transformations(e: SpatialElement, transformations: MappingToCoordinateSystem_t) -> None:
     """
     Set the transformation of a SpatialElement *only in memory*.
+
     Parameters
     ----------
     e
@@ -92,7 +92,7 @@ def _(e: DataTree, transformations: MappingToCoordinateSystem_t) -> None:
     dims = get_axes_names(e)
     from spatialdata.transformations.transformations import Scale, Sequence
 
-    old_shape: Optional[ArrayLike] = None
+    old_shape: ArrayLike | None = None
     for i, (scale, node) in enumerate(dict(e).items()):
         # this is to be sure that the pyramid levels are listed here in the correct order
         if scale != f"scale{i}":
@@ -122,7 +122,7 @@ def _(e: DataTree, transformations: MappingToCoordinateSystem_t) -> None:
 
 @_set_transformations.register(GeoDataFrame)
 @_set_transformations.register(DaskDataFrame)
-def _(e: Union[GeoDataFrame, GeoDataFrame], transformations: MappingToCoordinateSystem_t) -> None:
+def _(e: GeoDataFrame | GeoDataFrame, transformations: MappingToCoordinateSystem_t) -> None:
     _set_transformations_to_element(e, transformations)
     # _set_transformations_to_dict_container(e.attrs, transformations)
 
@@ -149,7 +149,7 @@ def _(e: DataTree) -> MappingToCoordinateSystem_t | None:
 
 @_get_transformations.register(GeoDataFrame)
 @_get_transformations.register(DaskDataFrame)
-def _(e: Union[GeoDataFrame, DaskDataFrame]) -> MappingToCoordinateSystem_t | None:
+def _(e: GeoDataFrame | DaskDataFrame) -> MappingToCoordinateSystem_t | None:
     return _get_transformations_from_dict_container(e.attrs)
 
 

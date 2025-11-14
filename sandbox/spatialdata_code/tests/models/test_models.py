@@ -22,8 +22,6 @@ from numpy.random import default_rng
 from shapely.geometry import MultiPolygon, Point, Polygon
 from shapely.io import to_ragged_array
 from spatial_image import to_spatial_image
-from xarray import DataArray, DataTree
-
 from spatialdata._core.spatialdata import SpatialData
 from spatialdata._types import ArrayLike
 from spatialdata.models._utils import (
@@ -53,6 +51,8 @@ from spatialdata.transformations.operations import (
     set_transformation,
 )
 from spatialdata.transformations.transformations import Identity, Scale
+from xarray import DataArray, DataTree
+
 from tests.conftest import (
     MULTIPOLYGON_PATH,
     POINT_PATH,
@@ -212,9 +212,9 @@ class TestModels:
         assert actual.scale0.image.dtype == image.dtype
         assert actual.scale1.image.dtype == image.dtype
         assert set(np.unique(image)) == set(np.unique(actual.scale0.image)), "Scale0 should be preserved"
-        assert set(np.unique(image)) >= set(
-            np.unique(actual.scale1.image)
-        ), "Subsequent scales should not have interpolation artifacts"
+        assert set(np.unique(image)) >= set(np.unique(actual.scale1.image)), (
+            "Subsequent scales should not have interpolation artifacts"
+        )
 
     @pytest.mark.parametrize("model", [ShapesModel])
     @pytest.mark.parametrize("path", [POLYGON_PATH, MULTIPOLYGON_PATH, POINT_PATH])

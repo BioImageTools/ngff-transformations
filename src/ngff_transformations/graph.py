@@ -1,14 +1,13 @@
-from collections import defaultdict
 from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
-from pydantic import ValidationError
 from ome_zarr_models._utils import TransformGraph
 from ome_zarr_models._v06.coordinate_transforms import (
     CoordinateSystemIdentifier,
     Transform,
 )
+from pydantic import ValidationError
 
 
 def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
@@ -153,9 +152,7 @@ def _add_transform_and_inverse_transformation_edges(
         pass
 
 
-def draw_graph(
-    g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True
-) -> None:
+def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True) -> None:
     """
     Draw a NetworkX graph showing all nodes and edges with their names.
 
@@ -213,10 +210,7 @@ def draw_graph(
     plt.show()
 
 
-def get_relative_path(
-    graph: nx.DiGraph,
-    source_coordinate_system: str,
-    target_coordinate_system: str) -> list[str]:
+def get_relative_path(graph: nx.DiGraph, source_coordinate_system: str, target_coordinate_system: str) -> list[str]:
     cost_key = "cost"
     """
     Get the relative path from one node to another in the transformation graph.
@@ -266,8 +260,7 @@ def create_sequence_transformation_from_path(
         transformations.append(edge_transformation)
 
     from ome_zarr_models._v06.coordinate_transforms import Sequence
-    transformations = Sequence(
-        transformations=transformations
-    )
+
+    transformations = Sequence(transformations=transformations)
 
     return transformations

@@ -20,8 +20,6 @@ from scipy import ndimage as ndi
 from shapely import linearrings, polygons
 from shapely.geometry import MultiPolygon, Point, Polygon
 from skimage import data
-from xarray import DataArray, DataTree
-
 from spatialdata._core._deepcopy import deepcopy
 from spatialdata._core.spatialdata import SpatialData
 from spatialdata._types import ArrayLike
@@ -35,6 +33,7 @@ from spatialdata.models import (
     ShapesModel,
     TableModel,
 )
+from xarray import DataArray, DataTree
 
 SEED = 0
 RNG = default_rng(seed=SEED)
@@ -117,8 +116,7 @@ def full_sdata() -> SpatialData:
 
 @pytest.fixture(
     # params=["labels"]
-    params=["full", "empty"]
-    + ["images", "labels", "points", "table_single_annotation", "table_multiple_annotations"]
+    params=["full", "empty"] + ["images", "labels", "points", "table_single_annotation", "table_multiple_annotations"]
     # + ["empty_" + x for x in ["table"]] # TODO: empty table not supported yet
 )
 def sdata(request) -> SpatialData:

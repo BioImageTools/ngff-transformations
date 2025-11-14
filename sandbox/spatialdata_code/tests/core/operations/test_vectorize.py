@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 from geopandas import GeoDataFrame
 from shapely import MultiPoint, Point
-
 from spatialdata._core.operations.vectorize import to_circles, to_polygons
 from spatialdata.datasets import blobs
 from spatialdata.models.models import ShapesModel

@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-
 from spatialdata.dataloader import ImageTilesDataset
 from spatialdata.datasets import blobs_annotating_element
 

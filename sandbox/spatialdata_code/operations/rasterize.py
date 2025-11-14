@@ -7,8 +7,6 @@ from dask.array import Array as DaskArray
 from dask.dataframe import DataFrame as DaskDataFrame
 from geopandas import GeoDataFrame
 from shapely import Point
-from xarray import DataArray, DataTree
-
 from spatialdata._core.operations._utils import _parse_element
 from spatialdata._core.operations.transform import transform
 from spatialdata._core.operations.vectorize import to_polygons
@@ -39,6 +37,7 @@ from spatialdata.transformations.transformations import (
     Translation,
     _get_affine_for_element,
 )
+from xarray import DataArray, DataTree
 
 VALUES_COLUMN = "__values_column"
 
@@ -670,9 +669,9 @@ def rasterize_shapes_points(
     elif isinstance(agg_func, str):
         AGGREGATIONS = ["sum", "count", "count_cat", "first"]
 
-        assert np.isin(
-            agg_func, AGGREGATIONS
-        ), f"Aggregation function must be one of {', '.join(AGGREGATIONS)}. Found {agg_func}"
+        assert np.isin(agg_func, AGGREGATIONS), (
+            f"Aggregation function must be one of {', '.join(AGGREGATIONS)}. Found {agg_func}"
+        )
 
         assert agg_func == "count" or value_key is not None, f"value_key cannot be done for agg_func={agg_func}"
 

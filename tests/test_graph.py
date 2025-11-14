@@ -13,17 +13,10 @@ from ngff_transformations.graph import (
     transform_graph_to_networkx,
 )
 
-
-EXAMPLE_PATH = (
-    Path(__file__).parent.parent
-    / "data"
-    / "ngff-rfc5-coordinate-transformation-examples"
-)
+EXAMPLE_PATH = Path(__file__).parent.parent / "data" / "ngff-rfc5-coordinate-transformation-examples"
 
 
-def get_test_zarr_paths(
-    data_dir: Path = EXAMPLE_PATH
-) -> list[Path]:
+def get_test_zarr_paths(data_dir: Path = EXAMPLE_PATH) -> list[Path]:
     """
     Get all valid test Zarr paths recursively, excluding paths matching the pattern.
     """
@@ -34,7 +27,7 @@ def get_test_zarr_paths(
         "translationParams",
         "affineParams",
         "rotationParams",
-        ]
+    ]
 
     zarrs: list[Path] = []
     for item in data_dir.glob("*"):
@@ -71,7 +64,7 @@ def test_graph(zarr_path: Path):
 
     # Test path finding and sequence creation
     # For now perform path finding between an example edge's nodes
-    
+
     example_edge = list(nx_graph.edges)[0]
     path = get_relative_path(nx_graph, example_edge[0], example_edge[1])
     sequence_transformation = create_sequence_transformation_from_path(nx_graph, path)

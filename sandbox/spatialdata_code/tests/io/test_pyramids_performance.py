@@ -7,7 +7,6 @@ import numpy as np
 import pytest
 import xarray as xr
 import zarr
-
 from spatialdata import SpatialData
 from spatialdata._io import write_image
 from spatialdata._io.format import CurrentRasterFormat

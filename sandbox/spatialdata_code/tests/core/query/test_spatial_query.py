@@ -10,8 +10,6 @@ from anndata import AnnData
 from dask.dataframe import DataFrame as DaskDataFrame
 from geopandas import GeoDataFrame
 from shapely import MultiPolygon, Point, Polygon
-from xarray import DataArray, DataTree
-
 from spatialdata._core.data_extent import get_extent
 from spatialdata._core.query.spatial_query import (
     BaseSpatialRequest,
@@ -31,6 +29,8 @@ from spatialdata.models import (
 )
 from spatialdata.testing import assert_spatial_data_objects_are_identical
 from spatialdata.transformations import Identity, MapAxis, set_transformation
+from xarray import DataArray, DataTree
+
 from tests.conftest import _make_points, _make_squares
 
 
@@ -109,7 +109,7 @@ def test_bounding_box_request_wrong_coordinate_order():
 @pytest.mark.parametrize("with_polygon_query", [True, False])
 @pytest.mark.parametrize("multiple_boxes", [True, False])
 def test_query_points(is_3d: bool, is_bb_3d: bool, with_polygon_query: bool, multiple_boxes: bool):
-    """test the points bounding box_query"""
+    """Test the points bounding box_query"""
     data_x = np.array([10, 20, 20, 20, 40])
     data_y = np.array([10, 20, 30, 30, 50])
     data_z = np.array([100, 200, 200, 300, 500])
@@ -264,7 +264,11 @@ def test_query_raster(
     model = (
         Labels3DModel
         if is_labels and is_3d
-        else Labels2DModel if is_labels else Image3DModel if is_3d else Image2DModel
+        else Labels2DModel
+        if is_labels
+        else Image3DModel
+        if is_3d
+        else Image2DModel
     )
 
     image_element = model.parse(image)
@@ -404,7 +408,6 @@ def test_query_polygons(is_bb_3d: bool, with_polygon_query: bool, multiple_boxes
         assert isinstance(polygons_result, list)
         assert len(polygons_result) == 2
         if box_outside_polygon:
-
             assert polygons_result[0] is None
             assert polygons_result[1].index[0] == 3
         else:

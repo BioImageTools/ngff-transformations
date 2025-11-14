@@ -2,7 +2,6 @@ from typing import Any
 
 import pytest
 from shapely import GeometryType
-
 from spatialdata._io.format import CurrentPointsFormat, CurrentShapesFormat, ShapesFormatV01
 from spatialdata.models import PointsModel, ShapesModel
 

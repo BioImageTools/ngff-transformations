@@ -4,9 +4,9 @@ import pandas as pd
 import pytest
 from anndata import AnnData
 from anndata.tests.helpers import assert_equal
-
 from spatialdata import SpatialData, concatenate
 from spatialdata.models import TableModel
+
 from tests.conftest import _get_shapes, _get_table
 
 # notes on paths: https://github.com/orgs/scverse/projects/17/views/1?pane=issue&itemId=44066734
@@ -99,7 +99,7 @@ class TestMultiTable:
         tmpdir = Path(tmp_path) / "tmp.zarr"
         del full_sdata["table"].uns[TableModel.ATTRS_KEY]
         with pytest.raises(
-            TypeError, match="No current annotation metadata found. " "Please specify both region_key and instance_key."
+            TypeError, match="No current annotation metadata found. Please specify both region_key and instance_key."
         ):
             full_sdata.set_table_annotates_spatialelement("table", "labels2d", region_key="non_existent")
         with pytest.raises(ValueError, match="Instance key column 'non_existent' not found in table.obs."):

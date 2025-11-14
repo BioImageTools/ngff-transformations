@@ -12,13 +12,12 @@ from dask.array.core import Array as DaskArray
 from dask.dataframe import DataFrame as DaskDataFrame
 from geopandas import GeoDataFrame
 from shapely import Point
-from xarray import DataArray, Dataset, DataTree
-
 from spatialdata._core.spatialdata import SpatialData
 from spatialdata._types import ArrayLike
 from spatialdata.models import SpatialElement, get_axes_names, get_model
 from spatialdata.models._utils import DEFAULT_COORDINATE_SYSTEM, get_channels
 from spatialdata.transformations._utils import _get_scale, compute_coordinates, scale_radii
+from xarray import DataArray, Dataset, DataTree
 
 if TYPE_CHECKING:
     from spatialdata.transformations.transformations import (
@@ -52,7 +51,8 @@ def _transform_raster(
     c_shape: tuple[int, ...]
     c_shape = (data.shape[0],) if "c" in axes else ()
     new_spatial_shape = tuple(
-        int(np.max(new_v[:, i]) - np.min(new_v[:, i])) for i in range(len(c_shape), n_spatial_dims + len(c_shape))  # type: ignore[operator]
+        int(np.max(new_v[:, i]) - np.min(new_v[:, i]))
+        for i in range(len(c_shape), n_spatial_dims + len(c_shape))  # type: ignore[operator]
     )
     output_shape = c_shape + new_spatial_shape
     translation_vector = np.min(new_v[:, :-1], axis=0)
@@ -147,7 +147,7 @@ def _set_transformation_for_transformed_elements(
     to_coordinate_system
         The coordinate system to which the data is to be transformed. This value must be None if maintain_positioning
         is True.
-    """  # noqa: D401
+    """
     from spatialdata.transformations import (
         BaseTransformation,
         get_transformation,
@@ -287,9 +287,9 @@ def _(
         if transformation is None and to_coordinate_system is not None:
             return data.transform_to_coordinate_system(target_coordinate_system=to_coordinate_system)
         raise RuntimeError(ERROR_MSG_AFTER_0_0_15)
-    assert bool(transformation is None) != bool(
-        to_coordinate_system is None
-    ), "When maintain_positioning is True, only one of transformation and to_coordinate_system can be None"
+    assert bool(transformation is None) != bool(to_coordinate_system is None), (
+        "When maintain_positioning is True, only one of transformation and to_coordinate_system can be None"
+    )
     new_elements: dict[str, dict[str, Any]] = {}
     for element_type in ["images", "labels", "points", "shapes"]:
         d = getattr(data, element_type)

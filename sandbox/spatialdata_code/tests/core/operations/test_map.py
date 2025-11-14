@@ -2,10 +2,9 @@ import re
 
 import numpy as np
 import pytest
-from xarray import DataArray
-
 from spatialdata._core.operations.map import map_raster
 from spatialdata.transformations import Translation, get_transformation, set_transformation
+from xarray import DataArray
 
 
 def _multiply(arr, parameter=10):

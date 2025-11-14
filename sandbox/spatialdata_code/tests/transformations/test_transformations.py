@@ -4,8 +4,6 @@ from copy import deepcopy
 import numpy as np
 import pytest
 import xarray.testing
-from xarray import DataArray
-
 from spatialdata import transform
 from spatialdata.datasets import blobs
 from spatialdata.models import Image2DModel, PointsModel
@@ -34,6 +32,7 @@ from spatialdata.transformations.transformations import (
     _decompose_transformation,
     _get_affine_for_element,
 )
+from xarray import DataArray
 
 
 def test_identity():
@@ -741,7 +740,8 @@ def test_ngff_conversion_not_supported():
 
 def test_get_affine_for_element(images):
     """This is testing the ability to predict the axis of a transformation given the transformation and the element
-    it will be applied to. It is also testing the embedding of a 2d image with channel into the 3d space."""
+    it will be applied to. It is also testing the embedding of a 2d image with channel into the 3d space.
+    """
     image = images.images["image2d"]
     t = Affine(
         np.array(
@@ -765,7 +765,7 @@ def test_get_affine_for_element(images):
         np.array(
             [
                 # fmt: off
-                #c  y  x       # noqa: E265
+                # c  y  x
                 [1, 0, 0, 0],  # c
                 [0, 0, 1, 1],  # x
                 [0, 1, 0, 2],  # y

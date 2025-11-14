@@ -1,16 +1,15 @@
 ##
+import numpy as np
 import xarray
+from spatialdata.datasets import blobs
 from spatialdata.transformations import (
     Affine,
+    Scale,
+    Sequence,
+    Translation,
     get_transformation,
     set_transformation,
-    Sequence,
-    Scale,
-    Translation,
 )
-from spatialdata.datasets import blobs
-from xarray import DataArray
-import numpy as np
 
 sdata = blobs()
 
@@ -25,17 +24,13 @@ x
 # affine = Affine(
 #     [[1, 2, 3], [4, 5, 6], [0, 0, 1]], input_axes=("x", "y"), output_axes=("x", "y")
 # )
-affine = Sequence(
-    [Scale([2, 3], axes=("x", "y")), Translation([2, 3], axes=("x", "y"))]
-)
+affine = Sequence([Scale([2, 3], axes=("x", "y")), Translation([2, 3], axes=("x", "y"))])
 set_transformation(image, affine, "aligned")
 
 
-def ngff_to_xarray_single_scale(
-    image: np.ndarray, transformation: Affine
-) -> xarray.DataArray:
+def ngff_to_xarray_single_scale(image: np.ndarray, transformation: Affine) -> xarray.DataArray:
     """
-    the input is in pixel coordinates
+    The input is in pixel coordinates
 
     """
     pass
@@ -43,17 +38,15 @@ def ngff_to_xarray_single_scale(
 
 def xarray_single_scale_to_ngff(image: xarray.DataArray) -> tuple[np.ndarray, Affine]:
     """
-    the input is in pixel coordinates
+    The input is in pixel coordinates
 
     """
     pass
 
 
-def ngff_to_xarray_multiscale(
-    image: list[np.ndarray], transformation: Affine
-) -> xarray.DataTree:
+def ngff_to_xarray_multiscale(image: list[np.ndarray], transformation: Affine) -> xarray.DataTree:
     """
-    the input is in pixel coordinates, each image is a different downscale levle of the same image pyramid and the
+    The input is in pixel coordinates, each image is a different downscale levle of the same image pyramid and the
     center of each image is aligned
 
     """

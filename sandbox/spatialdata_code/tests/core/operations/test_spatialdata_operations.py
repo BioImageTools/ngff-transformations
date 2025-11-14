@@ -5,7 +5,6 @@ import math
 import numpy as np
 import pytest
 from anndata import AnnData
-
 from spatialdata._core.concatenate import _concatenate_tables, concatenate
 from spatialdata._core.data_extent import are_extents_equal, get_extent
 from spatialdata._core.operations._utils import transform_to_data_extent
@@ -29,6 +28,7 @@ from spatialdata.transformations.transformations import (
     Sequence,
     Translation,
 )
+
 from tests.conftest import _get_table
 
 
@@ -471,9 +471,9 @@ def test_transform_to_data_extent(full_sdata: SpatialData, maintain_positioning:
             data_extent_before = get_extent(before, coordinate_system="global")
             data_extent_after = get_extent(after, coordinate_system="global")
             # huge tolerance because of the bug with pixel perfectness
-            assert are_extents_equal(
-                data_extent_before, data_extent_after, atol=4
-            ), f"data_extent_before: {data_extent_before}, data_extent_after: {data_extent_after} for element {element}"
+            assert are_extents_equal(data_extent_before, data_extent_after, atol=4), (
+                f"data_extent_before: {data_extent_before}, data_extent_after: {data_extent_after} for element {element}"
+            )
 
 
 def test_validate_table_in_spatialdata(full_sdata):

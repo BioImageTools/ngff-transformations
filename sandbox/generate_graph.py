@@ -2,15 +2,10 @@
 from pathlib import Path
 
 import zarr
-
 from ome_zarr_models._v06.collection import Collection
 from ome_zarr_models._v06.image import Image
 
-EXAMPLE_PATH = (
-    Path(__file__).parent.parent
-    / "data"
-    / "ngff-rfc5-coordinate-transformation-examples"
-)
+EXAMPLE_PATH = Path(__file__).parent.parent / "data" / "ngff-rfc5-coordinate-transformation-examples"
 
 
 def get_all_zarrs(directory: Path) -> list[Path]:
@@ -42,7 +37,7 @@ for zarr_path in get_all_zarrs(EXAMPLE_PATH):
             group = Collection.from_zarr(zarr.open_group(zarr_path, mode="r"))
         else:
             group = Image.from_zarr(zarr.open_group(zarr_path, mode="r"))
-    except Exception as e:
+    except Exception:
         # raise e
         # print(str(e))
         # continue
@@ -52,7 +47,7 @@ for zarr_path in get_all_zarrs(EXAMPLE_PATH):
     print(f"📈 Rendering transform graph for {zarr_path.relative_to(EXAMPLE_PATH)}")
     graph = group.transform_graph()
 
-    from ngff_transformations.graph import transform_graph_to_networkx, draw_graph
+    from ngff_transformations.graph import draw_graph, transform_graph_to_networkx
 
     nx_graph = transform_graph_to_networkx(graph)
     draw_graph(nx_graph)
@@ -66,6 +61,3 @@ for zarr_path in get_all_zarrs(EXAMPLE_PATH):
     # PILImage.open(io.BytesIO(png_bytes)).show()  # uses default image viewer
 
     pass
-
-
-

@@ -3,7 +3,6 @@ import os
 import tempfile
 
 import pytest
-
 from spatialdata import SpatialData, read_zarr
 from spatialdata._io._utils import _is_element_self_contained
 from spatialdata._logging import logger
@@ -11,7 +10,7 @@ from spatialdata.transformations import Scale, get_transformation, set_transform
 
 
 def test_save_transformations(full_sdata):
-    """test io for transformations"""
+    """Test io for transformations"""
     with tempfile.TemporaryDirectory() as tmp_dir:
         f = os.path.join(tmp_dir, "data.zarr")
         scale = Scale([2, 2], axes=("x", "y"))
@@ -41,8 +40,7 @@ def test_validate_can_write_metadata_on_element(full_sdata, element_name):
         # trying to save metadata before writing the data
         with pytest.warns(
             UserWarning,
-            match="The SpatialData object appears not to be backed by a Zarr storage, so metadata cannot be "
-            "written.",
+            match="The SpatialData object appears not to be backed by a Zarr storage, so metadata cannot be written.",
         ):
             full_sdata._validate_can_write_metadata_on_element(element_name)
 
@@ -57,7 +55,7 @@ def test_validate_can_write_metadata_on_element(full_sdata, element_name):
 
 @pytest.mark.parametrize("element_name", ["image2d", "labels2d", "points_0", "circles"])
 def test_save_transformations_incremental(element_name, full_sdata, caplog):
-    """test io for transformations"""
+    """Test io for transformations"""
     with tempfile.TemporaryDirectory() as tmp_dir:
         f0 = os.path.join(tmp_dir, f"{element_name}0.zarr")
         full_sdata.write(f0)

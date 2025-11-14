@@ -4,8 +4,8 @@ from ome_zarr_models._v06.coordinate_transforms import (
     Axis,
     CoordinateSystem,
     Scale,
-    Translation,
     Sequence,
+    Translation,
 )
 
 # Define input coordinate system (x, y)
