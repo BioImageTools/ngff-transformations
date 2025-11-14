@@ -1,18 +1,17 @@
-from typing import Any
+import logging
 
 import matplotlib.pyplot as plt
 import networkx as nx
 from ome_zarr_models._utils import TransformGraph
 from ome_zarr_models._v06.coordinate_transforms import (
     CoordinateSystemIdentifier,
-    Transform,
     Sequence,
+    Transform,
 )
-from pydantic import ValidationError
-import logging
 from ome_zarr_models._v06.coordinate_transforms import (
     Sequence as SequenceTransformation,
 )
+from pydantic import ValidationError
 
 
 def transform_graph_to_networkx(tgraph: TransformGraph) -> nx.DiGraph:
@@ -125,9 +124,7 @@ def _get_name_of_subgraph(
             f"Ambiguous coordinate system name '{cs_identifier}' found in both root and subgraph '{path_name}'. Use full identifier."
         )
     if cs_identifier not in nodes and cs_path_name not in nodes:
-        raise ValueError(
-            f"Coordinate system '{cs_identifier}' not found in graph nodes."
-        )
+        raise ValueError(f"Coordinate system '{cs_identifier}' not found in graph nodes.")
     if cs_path_name in nodes:
         return cs_path_name
     return cs_identifier
@@ -159,9 +156,7 @@ def _add_transform_and_inverse_transformation_edges(
         pass
 
 
-def draw_graph(
-    g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True
-) -> None:
+def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True) -> None:
     """
     Draw a NetworkX graph showing all nodes and edges with their names.
 
@@ -219,9 +214,7 @@ def draw_graph(
     plt.show()
 
 
-def get_relative_path(
-    graph: nx.DiGraph, source_coordinate_system: str, target_coordinate_system: str
-) -> list[str]:
+def get_relative_path(graph: nx.DiGraph, source_coordinate_system: str, target_coordinate_system: str) -> list[str]:
     cost_key = "cost"
     """
     Get the relative path from one node to another in the transformation graph.
@@ -270,14 +263,10 @@ def create_sequence_transformation_from_graph_walk(
         edge_transformation = graph.get_edge_data(source, target)["transformation"]
         transformations.append(edge_transformation)
 
-    return Sequence(
-        input=walk[0], output=walk[-1], transformations=tuple(transformations)
-    )
+    return Sequence(input=walk[0], output=walk[-1], transformations=tuple(transformations))
 
 
-def get_node(
-    path: str | None = None, name: str | None = None
-) -> str | CoordinateSystemIdentifier:
+def get_node(path: str | None = None, name: str | None = None) -> str | CoordinateSystemIdentifier:
     if path is None and name is None:
         raise ValueError("Both path and name of the coordinate system cannot be None")
     if path is None:
@@ -287,17 +276,13 @@ def get_node(
     return CoordinateSystemIdentifier(path=path, name=name)
 
 
-def find_walks_in_graph(
-    graph, src_path, src_name, tgt_path, tgt_name
-) -> list[str | CoordinateSystemIdentifier]:
+def find_walks_in_graph(graph, src_path, src_name, tgt_path, tgt_name) -> list[str | CoordinateSystemIdentifier]:
     src_node = get_node(src_path, src_name)
     tgt_node = get_node(tgt_path, tgt_name)
 
     graph_walk = list(nx.all_shortest_paths(graph, src_node, tgt_node))
     if not graph_walk:
-        raise ValueError(
-            f"No path found from {src_node} to {tgt_node} in the transformation graph."
-        )
+        raise ValueError(f"No path found from {src_node} to {tgt_node} in the transformation graph.")
     if len(graph_walk) > 1:
         logging.warning(
             f"Multiple paths found from {src_node} to {tgt_node} in the transformation graph. Using the first one."
