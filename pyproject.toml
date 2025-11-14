@@ -60,6 +60,13 @@ optional-dependencies.test = [
   "coverage>=7.10",
   "pytest",
 ]
+optional-dependencies.sandbox = [
+  "jupyter",
+  "dask-image",
+  "scikit-image",
+  "xarray",
+  "networkx",
+]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://ngff-transformations.readthedocs.io/"
 urls.Homepage = "https://github.com/BioImageTools/ngff-transformations"
