@@ -1,0 +1,239 @@
+{
+  "attributes": {
+    "ome": {
+      "version": "0.6",
+      "multiscales": [
+        {
+          "coordinateSystems": [
+            {
+              "name": "physical",
+              "axes": [
+                {
+                  "name": "z",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                },
+                {
+                  "name": "c",
+                  "type": "channel",
+                  "discrete": true,
+                  "unit": null,
+                  "longName": null
+                },
+                {
+                  "name": "y",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                },
+                {
+                  "name": "x",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                }
+              ]
+            },
+            {
+              "name": "world",
+              "axes": [
+                {
+                  "name": "z",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                },
+                {
+                  "name": "c",
+                  "type": "channel",
+                  "discrete": true,
+                  "unit": null,
+                  "longName": null
+                },
+                {
+                  "name": "y",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                },
+                {
+                  "name": "x",
+                  "type": "space",
+                  "discrete": null,
+                  "unit": "um",
+                  "longName": null
+                }
+              ]
+            }
+          ],
+          "datasets": [
+            {
+              "path": "level0",
+              "coordinateTransformations": [
+                {
+                  "type": "sequence",
+                  "input": "level0",
+                  "output": "physical",
+                  "name": null,
+                  "transformations": [
+                    {
+                      "type": "scale",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "scale": [
+                        0.5,
+                        1.0,
+                        0.2,
+                        0.2
+                      ],
+                      "path": null
+                    },
+                    {
+                      "type": "translation",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "translation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "path": null
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "level1",
+              "coordinateTransformations": [
+                {
+                  "type": "sequence",
+                  "input": "level1",
+                  "output": "physical",
+                  "name": null,
+                  "transformations": [
+                    {
+                      "type": "scale",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "scale": [
+                        1.0,
+                        1.0,
+                        0.4,
+                        0.4
+                      ],
+                      "path": null
+                    },
+                    {
+                      "type": "translation",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "translation": [
+                        0.0,
+                        0.0,
+                        0.1,
+                        0.1
+                      ],
+                      "path": null
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "level2",
+              "coordinateTransformations": [
+                {
+                  "type": "sequence",
+                  "input": "level2",
+                  "output": "physical",
+                  "name": null,
+                  "transformations": [
+                    {
+                      "type": "scale",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "scale": [
+                        2.0,
+                        1.0,
+                        0.8,
+                        0.8
+                      ],
+                      "path": null
+                    },
+                    {
+                      "type": "translation",
+                      "input": null,
+                      "output": null,
+                      "name": null,
+                      "translation": [
+                        0.0,
+                        0.0,
+                        0.30000000000000004,
+                        0.30000000000000004
+                      ],
+                      "path": null
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "coordinateTransformations": [
+            {
+              "type": "rotation",
+              "input": "physical",
+              "output": "world",
+              "name": null,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.7071067811865476,
+                  -0.7071067811865475
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.7071067811865475,
+                  0.7071067811865476
+                ]
+              ],
+              "path": null
+            }
+          ],
+          "metadata": null,
+          "name": "Example_Image",
+          "type": null
+        }
+      ]
+    }
+  },
+  "zarr_format": 3,
+  "consolidated_metadata": null,
+  "node_type": "group"
+}
