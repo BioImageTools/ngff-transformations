@@ -8,7 +8,7 @@ from ome_zarr_models._v06.coordinate_transforms import Sequence
 from ome_zarr_models._v06.image import Image
 
 from ngff_transformations.graph import (
-    create_sequence_transformation_from_path,
+    find_walks_in_graph,
     get_relative_path,
     transform_graph_to_networkx,
 )
@@ -67,6 +67,7 @@ def test_graph(zarr_path: Path):
 
     example_edge = list(nx_graph.edges)[0]
     path = get_relative_path(nx_graph, example_edge[0], example_edge[1])
-    sequence_transformation = create_sequence_transformation_from_path(nx_graph, path)
+    sequence_transformation = find_walks_in_graph(
+        graph=nx_graph, path)
 
     assert isinstance(sequence_transformation, Sequence)

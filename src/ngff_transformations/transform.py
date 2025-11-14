@@ -1,38 +1,11 @@
-import networkx as nx
 import numpy as np
-from ome_zarr_models._v06.coordinate_transforms import CoordinateSystemIdentifier, Sequence
+from ome_zarr_models._v06.coordinate_transforms import Sequence
 from xarray import DataArray
 
 
 def validata_point_shape(point: np.ndarray, transformation_sequence: Sequence):
     for transformation in transformation_sequence.transformations:
         assert len(point) == transformation.ndim, "Point ndim doesn't match transformation ndim"
-
-
-def get_node(path: str | None = None, name: str | None = None) -> str | CoordinateSystemIdentifier:
-    if path is None and name is None:
-        raise ValueError("Both path and name of the coordinate system cannot be None")
-    if path is None:
-        return name
-    if name is None:
-        return path
-    return CoordinateSystemIdentifier(path=path, name=name)
-
-
-def find_walks_in_graph(graph, src_path, src_name, tgt_path, tgt_name):
-    src_node = get_node(src_path, src_name)
-    tgt_node = get_node(tgt_path, tgt_name)
-
-    graph_walk = list(nx.all_shortest_paths(graph, src_node, tgt_node))[0]
-
-    transformation_sequence = []
-    for i in range(len(graph_walk) - 1):
-        transformation_sequence.append(graph.get_edge_data(graph_walk[i], graph_walk[i + 1])["transformation"])
-
-    transformation_sequence = Sequence(
-        input=graph_walk[0], output=graph_walk[-1], transformations=transformation_sequence
-    )
-    return transformation_sequence, (graph_walk[0], graph_walk[-1])
 
 
 def transform_with_sequence3D(
@@ -58,7 +31,7 @@ def transform_with_sequence3D(
     y_prime = transformed_points[:, 1].reshape(Y, X, Z)
     z_prime = transformed_points[:, 2].reshape(Y, X, Z)
 
-    return xarray.DataArray(
+    return DataArray(
         data,
         coords={
             "x_prime": (("y", "x", "z"), x_prime),
@@ -91,7 +64,7 @@ def transform_with_sequence(
     x_prime = transformed_points[:, 0].reshape(H, W)
     y_prime = transformed_points[:, 1].reshape(H, W)
 
-    return xarray.DataArray(
+    return DataArray(
         data,
         coords={
             "x_prime": (("y", "x"), x_prime),
