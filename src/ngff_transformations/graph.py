@@ -156,7 +156,9 @@ def _add_transform_and_inverse_transformation_edges(
         pass
 
 
-def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True) -> None:
+def draw_graph(
+    g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labels: bool = True
+, path: list | None = None, seed: int = 42) -> None:
     """
     Draw a NetworkX graph showing all nodes and edges with their names.
 
@@ -172,7 +174,7 @@ def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labe
     plt.figure(figsize=figsize)
 
     # Use spring layout for node positioning
-    pos = nx.spring_layout(g)
+    pos = nx.spring_layout(g, seed=seed)
 
     # Draw nodes
     nx.draw_networkx_nodes(g, pos, node_color="lightblue", node_size=3000, alpha=0.9)
@@ -191,6 +193,19 @@ def draw_graph(g: nx.DiGraph, figsize: tuple[int, int] = (12, 8), with_edge_labe
         width=2,
         connectionstyle="arc3,rad=0.1",
     )
+
+    if path:
+        nx.draw_networkx_edges(
+            g,
+            pos,
+            edgelist=path,
+            edge_color="r",
+            arrows=True,
+            arrowsize=20,
+            arrowstyle="->",
+            width=4,
+            connectionstyle="arc3,rad=0.1",
+        )
 
     # Draw edge labels if requested
     if with_edge_labels:

@@ -1,6 +1,7 @@
 import numpy as np
-from ome_zarr_models._v06.coordinate_transforms import Sequence
+from ome_zarr_models._v06.coordinate_transforms import Sequence, CoordinateSystemIdentifier
 from xarray import DataArray
+import networkx as nx
 
 
 def validata_point_shape(point: np.ndarray, transformation_sequence: Sequence):
@@ -8,9 +9,36 @@ def validata_point_shape(point: np.ndarray, transformation_sequence: Sequence):
         assert len(point) == transformation.ndim, "Point ndim doesn't match transformation ndim"
 
 
-def transform_with_sequence3D(
-    data: np.ndarray, axes: list[str], transformation_sequence: Sequence, output_axes: list[str]
-) -> DataArray:
+def get_node(path: str | None = None, name: str | None = None) -> str | CoordinateSystemIdentifier:
+    if path is None and name is None:
+        raise ValueError("Both path and name of the coordinate system cannot be None")
+    if path is None:
+        return name
+    if name is None:
+        return path
+    return CoordinateSystemIdentifier(path=path, name=name)
+
+def find_walks_in_graph(graph, src_path, src_name, tgt_path, tgt_name):
+    src_node = get_node(src_path, src_name)
+    tgt_node = get_node(tgt_path, tgt_name)
+
+    graph_walk = list(nx.all_shortest_paths(graph, src_node, tgt_node))[0]
+
+    path_edges = []
+    path_edges_names = []
+    for i in range(len(graph_walk) - 1):
+        path_edges.append(graph.get_edge_data(graph_walk[i], graph_walk[i + 1])['transformation'])
+        path_edges_names.append((graph_walk[i], graph_walk[i + 1]))
+
+    transformation_sequence = Sequence(
+        input=graph_walk[0], 
+        output=graph_walk[-1], 
+        transformations=path_edges
+    )
+    return transformation_sequence, (graph_walk[0], graph_walk[-1]), (path_edges_names, graph_walk)
+
+def transform_with_sequence3D(data: np.ndarray, axes: list[str], transformation_sequence: Sequence, 
+                            output_axes: list[str]) -> DataArray:
     # locate (inside the graph) the coordinate_system classes from the coordinate_system names
     # first validate the input data wrt to axes and input_coordinate_system
     # 1. check that the data shape is (n x len(axes))
