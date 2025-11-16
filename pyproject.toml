@@ -53,12 +53,18 @@ optional-dependencies.doc = [
   "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
 ]
-optional-dependencies.sandbox = [
-  "jupyter",
-]
 optional-dependencies.test = [
   "coverage>=7.10",
   "pytest",
+]
+optional-dependencies.sandbox = [
+  "jupyter",
+  "dask-image",
+  "scikit-image",
+  "xarray",
+  "networkx",
+  "matplotlib",
+  "ipympl",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://ngff-transformations.readthedocs.io/"
