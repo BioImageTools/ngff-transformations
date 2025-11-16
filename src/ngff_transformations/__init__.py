@@ -5,6 +5,5 @@ __version__ = version("ngff-transformations")
 from ngff_transformations.graph import (
     draw_graph,
     find_walks_in_graph,
-    get_relative_path,
     transform_graph_to_networkx,
 )
